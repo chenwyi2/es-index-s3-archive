@@ -1,3 +1,4 @@
 flask
 elasticsearch
 boto3
+requests
