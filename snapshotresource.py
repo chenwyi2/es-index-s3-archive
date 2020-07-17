@@ -2,6 +2,7 @@ import datetime
 import os
 import re
 import time
+import threading
 
 import elasticsearch
 
@@ -115,8 +116,19 @@ class SnapshotResource:
                 "include_global_state": False
             }
             create_response = self.collection.snapshot.create(repository=self.repository_name,
-                                                       snapshot=snapshot_name,
-                                                       body=data)
+                                                              snapshot=snapshot_name,
+                                                              body=data)
+            threading.Thread(target=self.get_snapshot_status, args=(snapshot_name, indices)).start()
+            return create_response
+        except Exception as e:
+            print e
+            return False
+        return indices
+
+    def get_snapshot_status(self, snapshot_name, indices):
+        try:
+            sep = ','
+            index = sep.join(indices)
             while True:
                 snapshot = self.get_s3_snapshot(snapshot=snapshot_name)
                 if snapshot[0]['state'] != 'IN_PROGRESS':
@@ -130,7 +142,6 @@ class SnapshotResource:
         except Exception as e:
             print e
             return False
-        return indices
 
     def get_archive_index_name(self, index_pattern, retention):
         """
