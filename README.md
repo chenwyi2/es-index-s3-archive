@@ -2,14 +2,16 @@
 Archive Elasticsearch indices into S3 compatible storage like Ceph  
 
 #### Index name pattern
-only archive index name in the pattern of 
+only archive indices with its name in the pattern of 
  ```
  index-pattern-YYYY.MM.DD
  ```
- 
+ YYYY.MM.DD timestamp is needed
+
  #### Runtime
 Tested on  
 Elaticsearch 7.7.1  
+python 2.7.4
 
 #### ENV needed
 MONGOSERVICE  
