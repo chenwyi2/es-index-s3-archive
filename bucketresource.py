@@ -45,9 +45,9 @@ class BucketResource:
 
 
 def main():
-    access_key = os.environ['S3AK'] if 'S3AK' in os.environ else 'RUEIDZ5X943KB73HPST3'
-    secret_key = os.environ['S3SK'] if 'S3SK' in os.environ else 'HXxjNM7oEwgu3LvNZqCDHSLwYlyZLgugCK8NHBRC'
-    s3_host = os.environ['S3HOST'] if 'S3HOST' in os.environ else 'http://10.91.243.202'
+    access_key = os.environ['S3AK'] if 'S3AK' in os.environ else ''
+    secret_key = os.environ['S3SK'] if 'S3SK' in os.environ else ''
+    s3_host = os.environ['S3HOST'] if 'S3HOST' in os.environ else ''
 
     s3resource = BucketResource(access_key, secret_key, s3_host)
     bucket_name = 'archive-' + time.strftime("%Y%W")

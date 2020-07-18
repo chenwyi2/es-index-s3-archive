@@ -68,7 +68,7 @@ def get_snapshot():
         snapshot = snapshotresource.get_s3_snapshot('*')
         return json.dumps(snapshot), 200
     except Exception as e:
-        print e.info
+        print (e.info)
         return e.info, e.status_code
 
 
@@ -80,7 +80,7 @@ def create_snapshot():
         snapshot = snapshotresource.create_s3_snapshot()
         return json.dumps(snapshot), 200
     except Exception as e:
-        print e.info
+        print (e.info)
         return e.info, e.status_code
 
 

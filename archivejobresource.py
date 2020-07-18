@@ -18,7 +18,7 @@ class ArchiveJobResource:
             if response.status_code == 200:
                 return None
             else:
-                print e.message
+                print (e.message)
                 return None
 
     def get_archive_job(self, index_name):
@@ -28,7 +28,7 @@ class ArchiveJobResource:
             response = requests.get(urljoin(self.mongo_base_url, url), params=query)
             return response.json()
         except Exception as e:
-            print e.message
+            print (e.message)
             return None
 
     def create_archive_job(self, index_name, retention):
@@ -38,7 +38,7 @@ class ArchiveJobResource:
             response = requests.post(urljoin(self.mongo_base_url, url), json=payload)
             return response.json()
         except Exception as e:
-            print e.message
+            print (e.message)
             return None
 
     def update_archive_job(self, index_name, retention):
@@ -49,7 +49,7 @@ class ArchiveJobResource:
             response = requests.put(urljoin(self.mongo_base_url, url), params=query, json=payload)
             return response.json()
         except Exception as e:
-            print e.message
+            print (e.message)
             return None
 
     def delete_archive_job(self, index_name):
@@ -63,28 +63,18 @@ class ArchiveJobResource:
             if response.status_code == 204:
                 return True
             else:
-                print e.message
+                print (e.message)
                 return False
 
 
 def main():
     archive_job_resource = ArchiveJobResource()
-    print archive_job_resource.list_archive_jobs()
+    print (archive_job_resource.list_archive_jobs())
     for archive_job in archive_job_resource.list_archive_jobs():
         archive_job_resource.delete_archive_job(archive_job['index'])
-    print archive_job_resource.list_archive_jobs()
-    """
-    print archive_job_resource.get_archive_job('nginx2')
-    print archive_job_resource.delete_archive_job('nginx')
+    print (archive_job_resource.list_archive_jobs())
 
-    print archive_job_resource.list_archive_jobs()
 
-    print archive_job_resource.create_archive_job('nginx', '7')
-    print archive_job_resource.list_archive_jobs()
-
-    print archive_job_resource.update_archive_job('nginx', '15')
-    print archive_job_resource.list_archive_jobs()
-    """
 if __name__ == "__main__":
     main()
 

@@ -14,10 +14,10 @@ class SnapshotResource:
     def __init__(self):
         # env ES_HOSTS: one host
         # TODO: array ES_HOSTS input can not be recognized
-        es_hosts = os.environ['ES_HOSTS'] if 'ES_HOSTS' in os.environ else '10.91.202.132'
-        access_key = os.environ['S3AK'] if 'S3AK' in os.environ else 'RUEIDZ5X943KB73HPST3'
-        secret_key = os.environ['S3SK'] if 'S3SK' in os.environ else 'HXxjNM7oEwgu3LvNZqCDHSLwYlyZLgugCK8NHBRC'
-        self.s3_host = os.environ['S3HOST'] if 'S3HOST' in os.environ else '10.91.204.20'
+        es_hosts = os.environ['ES_HOSTS'] if 'ES_HOSTS' in os.environ else ''
+        access_key = os.environ['S3AK'] if 'S3AK' in os.environ else ''
+        secret_key = os.environ['S3SK'] if 'S3SK' in os.environ else ''
+        self.s3_host = os.environ['S3HOST'] if 'S3HOST' in os.environ else ''
         self.s3resource = BucketResource(access_key, secret_key, 'http://' + self.s3_host)
         self.archive_job_resource = ArchiveJobResource()
         self.collection = elasticsearch.Elasticsearch(hosts=es_hosts)
@@ -121,7 +121,7 @@ class SnapshotResource:
             threading.Thread(target=self.get_snapshot_status, args=(snapshot_name, indices)).start()
             return create_response
         except Exception as e:
-            print e
+            print (e)
             return False
         return indices
 
@@ -140,7 +140,7 @@ class SnapshotResource:
             else:
                 return False
         except Exception as e:
-            print e
+            print (e)
             return False
 
     def get_archive_index_name(self, index_pattern, retention):
@@ -165,7 +165,7 @@ class SnapshotResource:
                     index.append(i)
             return index
         except Exception as e:
-            print e
+            print (e)
             return index
 
     def get_archive_index_retention(self, index_pattern):
@@ -187,12 +187,9 @@ class SnapshotResource:
 
 def main():
     snapshot_resource = SnapshotResource()
-    print snapshot_resource.list_index_patterns()
-    print snapshot_resource.create_s3_repository()
-    # print snapshot_resource.get_archive_index_name('iservice', 7)
-    # print snapshot_resource.get_s3_repository()
-    # print snapshot_resource.get_s3_snapshot('snapshot-20200715')
-    print snapshot_resource.create_s3_snapshot()
+    print (snapshot_resource.list_index_patterns())
+    print (snapshot_resource.create_s3_repository())
+    print (snapshot_resource.create_s3_snapshot())
 
 
 if __name__ == "__main__":
