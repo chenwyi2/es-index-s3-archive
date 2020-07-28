@@ -130,10 +130,10 @@ class SnapshotResource:
             sep = ','
             index = sep.join(indices)
             while True:
+                time.sleep(3)
                 snapshot = self.get_s3_snapshot(snapshot=snapshot_name)
                 if snapshot[0]['state'] != 'IN_PROGRESS':
                     break
-                time.sleep(3)
             if snapshot[0]['state'] == 'SUCCESS':
                 delete_response = self.collection.indices.delete(index=index, ignore_unavailable=True)
                 return indices
