@@ -3,6 +3,8 @@ import json
 from flask import Flask, request
 from archivejobresource import ArchiveJobResource
 from snapshotresource import SnapshotResource
+from multiprocessing import Process
+
 
 app = Flask(__name__)
 
@@ -72,13 +74,25 @@ def get_snapshot():
         return e.info, e.status_code
 
 
+def delete_archived_indices(snapshot_name, indices):
+    snapshotresource = SnapshotResource()
+    try:
+        snapshotresource.get_snapshot_status(snapshot_name, indices)
+    except Exception as e:
+        print (e)
+
+
 @app.route('/api/v1/snapshot', methods=['POST'])
 def create_snapshot():
     snapshotresource = SnapshotResource()
     try:
         snapshotresource.create_s3_repository()
         snapshot = snapshotresource.create_s3_snapshot()
-        return json.dumps(snapshot), 200
+        if snapshot:
+            p = Process(target=delete_archived_indices, args=(snapshot['snapshot_name'],
+                                                              snapshot['indices']))
+            p.start()
+        return json.dumps(snapshot['msg']), 200
     except Exception as e:
         print (e.info)
         return e.info, e.status_code

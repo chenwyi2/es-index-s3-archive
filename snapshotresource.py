@@ -96,7 +96,9 @@ class SnapshotResource:
         Get all indices with all index patterns -> flush indices -> create snapshot -> detect snapshot creation result
         in while True loop -> if SUCCESS delete indices
         Only return true if creation succeed
-        :return: list, names of indices which are archived, False for error or none
+        :return: dic:{string, snapshot_name; list, names of indices which are archived;
+                string, msg, create_snapshot api response}
+                None for error or none
         """
         snapshot_name = 'snapshot-' + datetime.date.today().strftime('%Y%m%d')
         indices = []
@@ -118,17 +120,16 @@ class SnapshotResource:
             create_response = self.collection.snapshot.create(repository=self.repository_name,
                                                               snapshot=snapshot_name,
                                                               body=data)
-            threading.Thread(target=self.get_snapshot_status, args=(snapshot_name, indices)).start()
-            return create_response
+            return {'snapshot_name': snapshot_name, 'indices': indices, 'msg': create_response}
         except Exception as e:
             print (e)
-            return False
-        return indices
+            return None
 
     def get_snapshot_status(self, snapshot_name, indices):
         try:
             sep = ','
             index = sep.join(indices)
+            snapshot = self.get_s3_snapshot(snapshot=snapshot_name)
             while True:
                 time.sleep(3)
                 snapshot = self.get_s3_snapshot(snapshot=snapshot_name)
@@ -138,10 +139,10 @@ class SnapshotResource:
                 delete_response = self.collection.indices.delete(index=index, ignore_unavailable=True)
                 return indices
             else:
-                return False
+                return None
         except Exception as e:
             print (e)
-            return False
+            return None
 
     def get_archive_index_name(self, index_pattern, retention):
         """
