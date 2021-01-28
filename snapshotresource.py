@@ -160,7 +160,7 @@ class SnapshotResource:
 
             for i in raw_index_list:
                 match_obj = re.match(re_pattern, i)
-                if not match_obj:
+                if match_obj:
                     index_date = datetime.datetime.strptime(match_obj.group(1), '%Y.%m.%d').date()
                     if index_date.__le__(retention_date):
                         index.append(i)
