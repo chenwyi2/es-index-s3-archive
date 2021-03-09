@@ -19,7 +19,8 @@ class SnapshotResource:
         self.s3_host = os.environ['S3HOST'] if 'S3HOST' in os.environ else ''
         self.s3resource = BucketResource(access_key, secret_key, 'http://' + self.s3_host)
         self.archive_job_resource = ArchiveJobResource()
-        self.collection = elasticsearch.Elasticsearch(hosts=es_hosts)
+        self.collection = elasticsearch.Elasticsearch(hosts=es_hosts,
+                                                      connection_class=elasticsearch.RequestsHttpConnection)
         self.repository_name = os.environ['ARCHIVE_NAME'] if 'ARCHIVE_NAME' in os.environ else 'archive'
 
     def list_indices(self, pattern):
