@@ -1,4 +1,5 @@
 FROM 10.94.34.96/middleware/python-uwsgi:1.16
+MAINTAINER Chen
 COPY * /snapshot_service/
 ADD snapshotService.conf /etc/nginx/conf.d/default.conf
 WORKDIR /snapshot_service
